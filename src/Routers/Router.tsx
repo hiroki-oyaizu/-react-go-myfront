@@ -11,7 +11,9 @@ import { ArticleIndex } from "../pages/article";
 import { ArticleNew } from "../pages/article/new";
 import { Test } from "../pages/Test";
 import { IndexUser } from "../pages/user";
+import { EditUser } from "../pages/user/edit";
 import { NewUsers } from "../pages/user/new";
+import { ShowUser } from "../pages/user/show.";
 import { UserIndex } from "../pages/UserIndex";
 
 const router = createBrowserRouter([
@@ -37,12 +39,20 @@ const router = createBrowserRouter([
     element: <ArticleNew />,
   },
   {
-    path: "users",
+    path: "/users",
     element: <IndexUser />,
   },
   {
-    path: "users/new",
+    path: "/users/new",
     element: <NewUsers />,
+  },
+  {
+    path: "/users/:id",
+    element: <ShowUser />,
+  },
+  {
+    path: "/users/edit/:id",
+    element: <EditUser />,
   },
 ]);
 export const Router = () => {

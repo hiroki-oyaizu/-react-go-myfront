@@ -1,15 +1,19 @@
-import { Stack } from "@chakra-ui/react";
-import { Box, Button, TextField } from "@material-ui/core";
+import { Button, Stack } from "@chakra-ui/react";
+import { Box, TextField } from "@material-ui/core";
 import axios from "axios";
+import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AllUserType } from ".";
-export const NewUsers = () => {
+
+export const EditUser = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const {
     handleSubmit,
     control,
-    formState: { errors },
+    // formState: { errors },
+    reset,
   } = useForm<AllUserType>({
     defaultValues: {
       id: 0,
@@ -18,6 +22,25 @@ export const NewUsers = () => {
       age: 0,
     },
   });
+
+  const fetchEditUser = async () => {
+    const res = await axios.get<AllUserType>(
+      `http://localhost:8080/users/${id}`
+    );
+    try {
+      if (res.status === 200 && res.data) {
+        reset({
+          id: res.data.id,
+          firstNane: res.data.firstNane,
+          lastNane: res.data.lastNane,
+          age: res.data.age,
+        });
+      }
+    } catch (error) {}
+  };
+  useEffect(() => {
+    fetchEditUser();
+  }, []);
 
   const onSubmit = async (data: AllUserType) => {
     data.age = Number(data.age); // ageプロパティを数値型に変換する
@@ -31,6 +54,7 @@ export const NewUsers = () => {
 
   return (
     <>
+      <h3>編集ページ</h3>
       <Stack
         sx={{
           width: 500,

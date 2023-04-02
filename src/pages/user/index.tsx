@@ -45,6 +45,7 @@ export const IndexUser = () => {
                 <Box>{user.lastNane}</Box>
                 <Box sx={{ borderBottom: "1px solid red" }}>{user.age} </Box>
               </Box>
+              <Link to={`/users/${user.id}`}>詳細</Link>
             </>
           );
         })}
