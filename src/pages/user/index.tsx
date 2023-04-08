@@ -8,6 +8,8 @@ export type AllUserType = {
   firstNane: string;
   lastNane: string;
   age: number;
+  mail: string;
+  password: string;
 };
 
 export const IndexUser = () => {

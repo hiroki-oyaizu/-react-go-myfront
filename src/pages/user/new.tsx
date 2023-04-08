@@ -16,6 +16,8 @@ export const NewUsers = () => {
       firstNane: "",
       lastNane: "",
       age: 0,
+      mail: "",
+      password: "",
     },
   });
 
@@ -37,8 +39,9 @@ export const NewUsers = () => {
           maxWidth: "100%",
           margin: "0 auto",
           alignItems: "center",
+          mt: 50,
+          textAlign: "center",
         }}
-        style={{ textAlign: "center" }}
         spacing={10}
       >
         <Box>
@@ -63,6 +66,24 @@ export const NewUsers = () => {
           <Controller
             control={control}
             name="age"
+            render={({ field, formState }) => (
+              <TextField variant="outlined" {...field} />
+            )}
+          />
+        </Box>
+        <Box>
+          <Controller
+            control={control}
+            name="mail"
+            render={({ field, formState }) => (
+              <TextField variant="outlined" {...field} />
+            )}
+          />
+        </Box>
+        <Box>
+          <Controller
+            control={control}
+            name="password"
             render={({ field, formState }) => (
               <TextField variant="outlined" {...field} />
             )}

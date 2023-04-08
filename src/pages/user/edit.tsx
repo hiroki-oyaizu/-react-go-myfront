@@ -20,6 +20,8 @@ export const EditUser = () => {
       firstNane: "",
       lastNane: "",
       age: 0,
+      mail: "",
+      password: "",
     },
   });
 
@@ -34,6 +36,8 @@ export const EditUser = () => {
           firstNane: res.data.firstNane,
           lastNane: res.data.lastNane,
           age: res.data.age,
+          mail: res.data.mail,
+          password: res.data.mail,
         });
       }
     } catch (error) {}
@@ -87,6 +91,24 @@ export const EditUser = () => {
           <Controller
             control={control}
             name="age"
+            render={({ field, formState }) => (
+              <TextField variant="outlined" {...field} />
+            )}
+          />
+        </Box>
+        <Box>
+          <Controller
+            control={control}
+            name="mail"
+            render={({ field, formState }) => (
+              <TextField variant="outlined" {...field} />
+            )}
+          />
+        </Box>
+        <Box>
+          <Controller
+            control={control}
+            name="password"
             render={({ field, formState }) => (
               <TextField variant="outlined" {...field} />
             )}
