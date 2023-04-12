@@ -4,7 +4,7 @@ import axios from "axios";
 import React, { useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
-import { AllUserType } from ".";
+import { AllUserType } from "../../types/user/UserType";
 
 export const EditUser = () => {
   const navigate = useNavigate();

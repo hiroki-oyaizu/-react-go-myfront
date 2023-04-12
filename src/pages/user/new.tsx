@@ -3,7 +3,7 @@ import { Box, Button, TextField } from "@material-ui/core";
 import axios from "axios";
 import { useForm, Controller } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { AllUserType } from ".";
+import { AllUserType } from "../../types/user/UserType";
 export const NewUsers = () => {
   const navigate = useNavigate();
   const {

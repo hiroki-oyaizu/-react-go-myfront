@@ -1,8 +1,8 @@
-import { Button } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { AllUserType } from ".";
+import { AllUserType } from "../../types/user/UserType";
+import { Button } from "@mui/material";
 
 export const ShowUser = () => {
   const { id } = useParams();

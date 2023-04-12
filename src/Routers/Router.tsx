@@ -1,7 +1,7 @@
 // src/Routers/Router.tsx
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "../App";
-import { ErrorPage } from "../components/ErrorPage";
+import { ErrorPage } from "../components/layout/ErrorPage";
 import { ArticleIndex } from "../pages/article";
 import { ArticleNew } from "../pages/article/new";
 import { Login } from "../pages/login/Login";
@@ -12,10 +12,16 @@ import { EditUser } from "../pages/user/edit";
 import { NewUsers } from "../pages/user/new";
 import { ShowUser } from "../pages/user/show.";
 import { UserIndex } from "../pages/UserIndex";
-import { AuthProvider } from "../contexts/AuthContext";
+import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import { PrivateRoute } from "./PrivateRoute";
+import { useEffect } from "react";
 
 export const Router = () => {
+  const { currentUser } = useAuth();
+
+  useEffect(() => {
+    console.log("currentUser changed: ", currentUser);
+  }, [currentUser]);
   return (
     <>
       <AuthProvider>
@@ -25,14 +31,13 @@ export const Router = () => {
             <Route
               path="/"
               element={
-                <PrivateRoute>
-                  <App />
-                </PrivateRoute>
+                // <PrivateRoute>
+                <App />
+                // </PrivateRoute>
               }
             />
             <Route path="/*" element={<ErrorPage />} />
-          </Routes>
-          <Routes>
+
             <Route path="/test" element={<Test />} />
             <Route path="/user" element={<UserIndex />} />
             <Route path="/article" element={<ArticleIndex />} />

@@ -28,9 +28,10 @@ export const Login = () => {
   const getLoginIDAndPassword = async (data: LoginType) => {
     try {
       const res = await axios.post("http://localhost:8080/login", data);
-      console.log("Response:", res);
+
       if (res.status === 200) {
-        await login(data.mail, data.password);
+        const { token } = res.data;
+        await login(data.mail, data.password, token); // トークンをlogin関数に渡す
         navigate("/"); // トップページへリダイレクト
       }
     } catch (error) {

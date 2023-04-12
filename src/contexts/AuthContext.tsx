@@ -3,7 +3,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 
 interface AuthContextType {
   currentUser: any; // 適切な型に変更してください。
-  login: (email: string, password: string) => Promise<void>; // 追加
+  login: (email: string, password: string, token: string) => Promise<void>; //
   // 他のプロパティがあればここに追加
 }
 
@@ -17,7 +17,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<any>(null); // 適切な型に変更してください。
 
   // ログイン処理を実装
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, token: string) => {
     // ログイン処理を実装してください。
     // 例: `setCurrentUser`を呼び出すなど
   };
