@@ -1,10 +1,11 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import React from "react";
 
 import { Link } from "react-router-dom";
 import dummy from "../../project/images/screenshot.png";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/system";
+import Inventory2Icon from "@mui/icons-material/Inventory2";
 
 const CustomTextField = styled(TextField)({
   backgroundColor: "white",
@@ -48,11 +49,25 @@ export const Header = () => {
         </Button>
       </Box>
       <Box>こんにちは〜〜〜さん</Box>
-      <Box>
-        <Link to="/users/new" style={{ marginRight: "10px" }}>
-          ユーザ新規登録
-        </Link>
-        <Link to="/users/new">ログアウト</Link>
+      <Button
+        variant="contained"
+        color="error"
+        component={Link}
+        to="/listing/new"
+      >
+        <Typography sx={{ color: "white" }}>出品する</Typography>
+        <Inventory2Icon />
+      </Button>
+
+      <Box sx={{ display: "block" }}>
+        <Box>
+          <Link to="/users/new" style={{ marginRight: "10px" }}>
+            ユーザ新規登録
+          </Link>
+        </Box>
+        <Box>
+          <Link to="/users/new">ログアウト</Link>
+        </Box>
       </Box>
       <Box>カート</Box>
     </Box>

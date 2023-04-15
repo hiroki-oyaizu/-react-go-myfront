@@ -15,6 +15,7 @@ import { UserIndex } from "../pages/UserIndex";
 import { AuthProvider, useAuth } from "../contexts/AuthContext";
 import { PrivateRoute } from "./PrivateRoute";
 import { useEffect } from "react";
+import { ListingNew } from "../pages/listing/new";
 
 export const Router = () => {
   const { currentUser } = useAuth();
@@ -47,6 +48,7 @@ export const Router = () => {
             <Route path="/users/:id" element={<ShowUser />} />
             <Route path="/users/edit/:id" element={<EditUser />} />
             <Route path="/tweet/new" element={<NewTweet />} />
+            <Route path="/listing/new" element={<ListingNew />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>
