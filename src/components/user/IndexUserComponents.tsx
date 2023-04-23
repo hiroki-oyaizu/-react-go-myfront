@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-export type AllUserType = {
+export type AllUserTypess = {
   id: number;
   firstNane: string;
   lastNane: string;
@@ -13,7 +13,7 @@ export type AllUserType = {
 };
 
 export const IndexUserComponents = () => {
-  const [allUsers, setAllUsers] = useState<AllUserType[]>([]);
+  const [allUsers, setAllUsers] = useState<AllUserTypess[]>([]);
 
   const fetchAllUsers = async () => {
     const res = await axios.get("http://localhost:8080/users");
@@ -32,7 +32,7 @@ export const IndexUserComponents = () => {
   return (
     <>
       <Box sx={{ textAlign: "cneter" }}>
-        {allUsers.map((user: AllUserType, index) => {
+        {allUsers.map((user: AllUserTypess, index) => {
           return (
             <>
               <Box

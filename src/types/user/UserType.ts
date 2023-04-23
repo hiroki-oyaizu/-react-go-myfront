@@ -1,8 +1,14 @@
 export type AllUserType = {
   id: number;
-  firstNane: string;
-  lastNane: string;
+  firstName: string;
+  lastName: string;
   age: number;
   mail: string;
   password: string;
+  profilePicture: string;
+  birthDay: {
+    year: number;
+    month: number;
+    day: number;
+  };
 };

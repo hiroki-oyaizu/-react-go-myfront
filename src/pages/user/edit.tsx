@@ -17,8 +17,8 @@ export const EditUser = () => {
   } = useForm<AllUserType>({
     defaultValues: {
       id: 0,
-      firstNane: "",
-      lastNane: "",
+      firstName: "",
+      lastName: "",
       age: 0,
       mail: "",
       password: "",
@@ -33,8 +33,8 @@ export const EditUser = () => {
       if (res.status === 200 && res.data) {
         reset({
           id: res.data.id,
-          firstNane: res.data.firstNane,
-          lastNane: res.data.lastNane,
+          firstName: res.data.firstName,
+          lastName: res.data.lastName,
           age: res.data.age,
           mail: res.data.mail,
           password: res.data.mail,
@@ -72,7 +72,7 @@ export const EditUser = () => {
         <Box>
           <Controller
             control={control}
-            name="firstNane"
+            name="firstName"
             render={({ field, formState }) => (
               <TextField variant="outlined" {...field} />
             )}
@@ -81,7 +81,7 @@ export const EditUser = () => {
         <Box>
           <Controller
             control={control}
-            name="lastNane"
+            name="lastName"
             render={({ field, formState }) => (
               <TextField variant="outlined" {...field} />
             )}

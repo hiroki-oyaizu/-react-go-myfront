@@ -38,8 +38,8 @@ export const ShowUser = () => {
   return (
     <>
       <h3>{`${id}詳細`}</h3>
-      {user?.firstNane}
-      {user?.lastNane}
+      {user?.firstName}
+      {user?.lastName}
       <Button onClick={deleteUser}>削除</Button>
       <Button onClick={goToEditUserPage}>編集ページ</Button>
     </>

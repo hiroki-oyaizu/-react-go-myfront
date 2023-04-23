@@ -28,10 +28,9 @@ export const Login = () => {
   const getLoginIDAndPassword = async (data: LoginType) => {
     try {
       const res = await axios.post("http://localhost:8080/login", data);
-
       if (res.status === 200) {
-        const { token } = res.data;
-        await login(data.mail, data.password, token); // トークンをlogin関数に渡す
+        const { token, firstName, lastName, userId } = res.data;
+        await login(data.mail, data.password, token, firstName, lastName); // トークンと名前・姓をlogin関数に渡す
         navigate("/"); // トップページへリダイレクト
       }
     } catch (error) {
@@ -49,10 +48,10 @@ export const Login = () => {
             height: "100vh",
             width: "100vw",
             margin: 0,
-            padding: 0, // paddingを0に設定
+            padding: 0,
             display: "flex",
-            alignItems: "center", // 垂直方向の中央揃え
-            justifyContent: "center", // 水平方向の中央揃え
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <Box
@@ -75,7 +74,7 @@ export const Login = () => {
                   control={control}
                   name="mail"
                   rules={{
-                    required: "メールアドレスは必須です", // 追加: 必須入力チェック
+                    required: "メールアドレスは必須です",
                   }}
                   render={({ field, formState, fieldState }) => (
                     <>

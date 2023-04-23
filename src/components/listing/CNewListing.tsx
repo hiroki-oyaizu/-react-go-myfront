@@ -1,9 +1,8 @@
-import { Box, Button, Typography } from "@mui/material";
-import React from "react";
+import { Box, Button, Input, InputLabel, Typography } from "@mui/material";
+import React, { useState } from "react";
 import { ListingType } from "../../types/Listing/ListingType";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { FormComponents } from "../form/FormComponents";
-import Select from "react-select";
 import { CategoryOptions, ConditionOptions } from "../../utils/Utils";
 import { SelectComponents } from "../form/SelectComponents";
 
@@ -28,6 +27,21 @@ export const CNewListing = () => {
     },
   });
 
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setPreviewImage(null);
+    }
+  };
+
   const onSubmit = (data: ListingType) => console.log(data);
   return (
     <>
@@ -35,16 +49,41 @@ export const CNewListing = () => {
         <div style={{ height: "100vh" }}>
           <Box sx={{ width: "100%", height: "100%", display: "flex" }}>
             <Box sx={{ width: "60%", borderRight: "1px solid #ddd" }}>
-              <Box sx={{ textAlign: "center" }}>画像</Box>
+              <Box
+                sx={{
+                  textAlign: "center",
+                  mt: 8,
+                  fontSize: 30,
+                  fontWeight: 700,
+                }}
+              >
+                商品画像
+              </Box>
               <Box
                 sx={{
                   display: "flex",
+                  flexDirection: "column",
                   justifyContent: "center",
                   alignItems: "center",
                   height: "100%",
                 }}
               >
-                <input type="file" />
+                {previewImage && (
+                  <Box sx={{ textAlign: "center", padding: "1rem" }}>
+                    <img
+                      src={previewImage}
+                      alt="preview"
+                      style={{ maxWidth: "100%", maxHeight: "100%" }}
+                    />
+                  </Box>
+                )}
+                <InputLabel htmlFor="image-upload">画像を選択</InputLabel>
+                <Input
+                  id="image-upload"
+                  type="file"
+                  onChange={handleImageChange}
+                  sx={{ display: "none" }}
+                />
               </Box>
             </Box>
             <Box
@@ -70,7 +109,7 @@ export const CNewListing = () => {
                   <Typography variant="h6">商品名</Typography>
                   <FormComponents
                     control={control}
-                    name={"title"}
+                    name={"description"}
                     label="商品名"
                   />
                 </Box>
@@ -105,26 +144,7 @@ export const CNewListing = () => {
                     options={CategoryOptions}
                     name={"category"}
                   />
-                  <Controller
-                    name="category"
-                    control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={CategoryOptions}
-                        styles={customStyles}
-                        onChange={(value) =>
-                          field.onChange(value ? value.value : "")
-                        }
-                        value={CategoryOptions.find(
-                          (option) => option.value === field.value
-                        )}
-                      />
-                    )}
-                  />
                 </Box>
-
                 <Box
                   sx={{
                     margin: "20px 0",
@@ -135,23 +155,10 @@ export const CNewListing = () => {
                   }}
                 >
                   <Typography variant="h6">商品の状態</Typography>
-                  <Controller
-                    name="condition"
+                  <SelectComponents
                     control={control}
-                    defaultValue=""
-                    render={({ field }) => (
-                      <Select
-                        {...field}
-                        options={ConditionOptions}
-                        styles={customStyles}
-                        onChange={(value) =>
-                          field.onChange(value ? value.value : "")
-                        }
-                        value={CategoryOptions.find(
-                          (option) => option.value === field.value
-                        )}
-                      />
-                    )}
+                    options={ConditionOptions}
+                    name={"condition"}
                   />
                 </Box>
                 <Box sx={{ margin: "20px 0" }}>

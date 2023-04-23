@@ -28,3 +28,38 @@ export const ConditionOptions: OptionType[] = [
   { value: "used_poor", label: "傷や汚れあり" },
   { value: "for_parts", label: "ジャンク品・部品取り" },
 ];
+
+// export const YearOptions: OptionType[] = [{ value: "1980", label: "1980年" }];
+
+export const YearOptions: OptionType[] = Array.from(
+  { length: 31 },
+  (_, index) => {
+    const year = 1980 + index;
+    return {
+      value: year.toString(),
+      label: `${year}年`,
+    };
+  }
+);
+
+export const MonthOptions: OptionType[] = Array.from(
+  { length: 12 },
+  (_, index) => {
+    const month = index + 1;
+    return {
+      value: month.toString(),
+      label: `${month}月`,
+    };
+  }
+);
+
+export const DayOptions: OptionType[] = Array.from(
+  { length: 31 },
+  (_, index) => {
+    const day = index + 1;
+    return {
+      value: day.toString(),
+      label: `${day}日`,
+    };
+  }
+);

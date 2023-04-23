@@ -1,11 +1,12 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Link } from "react-router-dom";
 import dummy from "../../project/images/screenshot.png";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/system";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
+import { useAuth } from "../../contexts/AuthContext";
 
 const CustomTextField = styled(TextField)({
   backgroundColor: "white",
@@ -26,6 +27,12 @@ const CustomTextField = styled(TextField)({
   },
 });
 export const Header = () => {
+  const { firstName, lastName, isLoggedIn, logout } = useAuth();
+
+  useEffect(() => {
+    // firstName, lastNameが変更されたときにログを出力する
+    console.log(firstName, lastName);
+  }, [firstName, lastName]);
   return (
     <Box
       sx={{
@@ -48,7 +55,10 @@ export const Header = () => {
           <SearchIcon />
         </Button>
       </Box>
-      <Box>こんにちは〜〜〜さん</Box>
+      <Box>
+        こんにちは {firstName}
+        {lastName} さん
+      </Box>
       <Button
         variant="contained"
         color="error"
@@ -60,14 +70,22 @@ export const Header = () => {
       </Button>
 
       <Box sx={{ display: "block" }}>
-        <Box>
-          <Link to="/users/new" style={{ marginRight: "10px" }}>
-            ユーザ新規登録
-          </Link>
-        </Box>
-        <Box>
-          <Link to="/users/new">ログアウト</Link>
-        </Box>
+        {isLoggedIn ? (
+          <Box>
+            <Button onClick={logout}>ログアウト</Button>
+          </Box>
+        ) : (
+          <Box sx={{ display: "flex" }}>
+            <Box>
+              <Link to="/users/new" style={{ marginRight: "10px" }}>
+                ユーザ新規登録
+              </Link>
+            </Box>
+            <Box>
+              <Link to="/login">ログイン</Link>
+            </Box>
+          </Box>
+        )}
       </Box>
       <Box>カート</Box>
     </Box>

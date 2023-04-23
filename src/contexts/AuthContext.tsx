@@ -1,32 +1,83 @@
-// AuthContext.tsx
-import { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  ReactNode,
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 
-interface AuthContextType {
-  currentUser: any; // 適切な型に変更してください。
-  login: (email: string, password: string, token: string) => Promise<void>; //
-  // 他のプロパティがあればここに追加
-}
-
-const AuthContext = createContext<AuthContextType>({} as AuthContextType);
-
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState<any>(null); // 適切な型に変更してください。
-
-  // ログイン処理を実装
-  const login = async (email: string, password: string, token: string) => {
-    // ログイン処理を実装してください。
-    // 例: `setCurrentUser`を呼び出すなど
-  };
-
-  // ログアウトの処理をここで行う
-
-  const value = { currentUser, login }; // login関数を追加
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+type AuthContextType = {
+  isLoggedIn: boolean;
+  login: (
+    mail: string,
+    password: string,
+    token: string,
+    firstName: string,
+    lastName: string
+  ) => void;
+  logout: () => void;
+  firstName: string;
+  lastName: string;
 };
 
-export const useAuth = () => useContext(AuthContext);
+type AuthContextProviderProps = {
+  children: ReactNode;
+};
+const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
+
+export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
+  children,
+}) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  const login = (
+    mail: string,
+    password: string,
+    token: string,
+    firstName: string,
+    lastName: string
+  ) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("firstName", firstName); // 保存
+    localStorage.setItem("lastName", lastName); // 保存
+    setIsLoggedIn(true);
+    setFirstName(firstName);
+    setLastName(lastName);
+  };
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("firstName");
+    localStorage.removeItem("lastName");
+    setIsLoggedIn(false);
+    setFirstName("");
+    setLastName("");
+  };
+
+  useEffect(() => {
+    // localStorageからfirstName, lastNameを取得し、状態を更新する
+    setFirstName(localStorage.getItem("firstName") || "");
+    setLastName(localStorage.getItem("lastName") || "");
+    setIsLoggedIn(localStorage.getItem("token") !== null);
+  }, [isLoggedIn]); // ← isLoggedInを依存関係に追加
+
+  return (
+    <AuthContext.Provider
+      value={{
+        isLoggedIn,
+        login,
+        logout,
+        firstName,
+        lastName,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
+};
