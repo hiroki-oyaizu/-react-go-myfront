@@ -27,12 +27,11 @@ const CustomTextField = styled(TextField)({
   },
 });
 export const Header = () => {
-  const { firstName, lastName, isLoggedIn, logout } = useAuth();
+  const { userId, firstName, lastName, isLoggedIn, logout } = useAuth();
 
   useEffect(() => {
-    // firstName, lastNameが変更されたときにログを出力する
-    console.log(firstName, lastName);
-  }, [firstName, lastName]);
+    console.log("User ID:", userId);
+  }, [firstName, lastName, userId]);
   return (
     <Box
       sx={{
@@ -56,8 +55,7 @@ export const Header = () => {
         </Button>
       </Box>
       <Box>
-        こんにちは {firstName}
-        {lastName} さん
+        こんにちは {firstName} {lastName} さん (ID: {userId})
       </Box>
       <Button
         variant="contained"

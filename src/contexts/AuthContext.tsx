@@ -12,10 +12,12 @@ type AuthContextType = {
     mail: string,
     password: string,
     token: string,
+    userId: number,
     firstName: string,
     lastName: string
   ) => void;
   logout: () => void;
+  userId: number;
   firstName: string;
   lastName: string;
 };
@@ -35,18 +37,23 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [userId, setUserId] = useState<number>(0);
 
   const login = (
     mail: string,
     password: string,
     token: string,
+    userId: number,
     firstName: string,
     lastName: string
   ) => {
+    console.log("Logging in with userId:", userId);
     localStorage.setItem("token", token);
-    localStorage.setItem("firstName", firstName); // 保存
-    localStorage.setItem("lastName", lastName); // 保存
+    localStorage.setItem("userId", userId.toString());
+    localStorage.setItem("firstName", firstName);
+    localStorage.setItem("lastName", lastName);
     setIsLoggedIn(true);
+    setUserId(userId);
     setFirstName(firstName);
     setLastName(lastName);
   };
@@ -61,9 +68,10 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
   };
 
   useEffect(() => {
-    // localStorageからfirstName, lastNameを取得し、状態を更新する
+    // localStorageからfirstName, lastName, userIdを取得し、状態を更新する
     setFirstName(localStorage.getItem("firstName") || "");
     setLastName(localStorage.getItem("lastName") || "");
+    setUserId(Number(localStorage.getItem("userId")) || 0); // ← userIdの状態を更新
     setIsLoggedIn(localStorage.getItem("token") !== null);
   }, [isLoggedIn]); // ← isLoggedInを依存関係に追加
 
@@ -71,6 +79,7 @@ export const AuthContextProvider: React.FC<AuthContextProviderProps> = ({
     <AuthContext.Provider
       value={{
         isLoggedIn,
+        userId,
         login,
         logout,
         firstName,
