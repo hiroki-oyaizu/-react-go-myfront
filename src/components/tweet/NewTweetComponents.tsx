@@ -4,6 +4,8 @@ import { FormComponents } from "../form/FormComponents";
 import { Controller, useForm } from "react-hook-form";
 import { TweetType } from "../../types/tweet/TweetType";
 import { useAuth } from "../../contexts/AuthContext";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const CustomButton = styled(Button)(() => ({
   width: "300px",
@@ -24,6 +26,8 @@ export const NewTweetComponents = () => {
   });
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const { userId } = useAuth();
+  const navigate = useNavigate();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -41,19 +45,39 @@ export const NewTweetComponents = () => {
     }
   };
 
-  const test = (data: TweetType) => {
+  const toBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const test = async (data: TweetType) => {
     const updatedData: TweetType = {
       ...data,
+      user_id: userId,
     };
 
-    const formData = new FormData();
-    formData.append("tweet_content", updatedData.tweet_content);
-    formData.append("user_id", updatedData.user_id.toString()); // userIdを追加
     if (imageFile) {
-      formData.append("image", imageFile);
+      // 画像ファイルが選択された場合、Base64形式に変換して追加
+      try {
+        const base64Image = await toBase64(imageFile);
+        console.log("Base64 Image Data:", base64Image);
+        updatedData.image = base64Image;
+      } catch (error) {
+        console.error("Image conversion to Base64 failed: ", error);
+      }
     }
-    // ここで formData をサーバーに送信
     console.log(updatedData);
+
+    await axios.post("http://localhost:8080/tweet/new", updatedData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    navigate("/");
   };
 
   return (

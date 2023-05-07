@@ -1,10 +1,13 @@
-import { Box, Button, TextField } from "@material-ui/core";
+import { Box, Button, InputLabel, TextField, Input } from "@material-ui/core";
 import { useForm, Controller } from "react-hook-form";
 import { AllUserType } from "../../types/user/UserType";
 import { Grid, Stack, Typography } from "@mui/material";
 import { makeStyles } from "@material-ui/styles";
 import { SelectComponents } from "../../components/form/SelectComponents";
 import { DayOptions, MonthOptions, YearOptions } from "../../utils/Utils";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 const useStyles = makeStyles({
   formBox: {
     width: 500,
@@ -39,9 +42,15 @@ const useStyles = makeStyles({
 
 type Props = {
   onSubmit: (data: AllUserType) => void;
+  previewImage: string | null;
+  handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-export const NewUserComponents = ({ onSubmit }: Props) => {
+export const NewUserComponents = ({
+  onSubmit,
+  previewImage,
+  handleImageChange,
+}: Props) => {
   const classes = useStyles();
   const { handleSubmit, control } = useForm<AllUserType>({
     defaultValues: {
@@ -51,7 +60,7 @@ export const NewUserComponents = ({ onSubmit }: Props) => {
       age: 0,
       mail: "",
       password: "",
-      profilePicture: "",
+      profileImage: "",
       birthDay: {
         year: 1980,
         month: 1,
@@ -59,6 +68,60 @@ export const NewUserComponents = ({ onSubmit }: Props) => {
       },
     },
   });
+  const [previewImages, setPreviewImage] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
+  const navigate = useNavigate();
+
+  const handleImageChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files ? e.target.files[0] : null;
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const dataUrl = reader.result as string;
+        setPreviewImage(dataUrl);
+      };
+      reader.readAsDataURL(file);
+      setImageFile(file); // 画像ファイルを状態変数に保存
+    } else {
+      setPreviewImage(null);
+      setImageFile(null); // 画像ファイルを状態変数に保存
+    }
+  };
+
+  const toBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+
+  const onSubmits = async (data: AllUserType) => {
+    const updateData: AllUserType = {
+      ...data,
+    };
+    if (imageFile) {
+      // 画像ファイルが選択された場合、Base64形式に変換して追加
+      try {
+        const base64Image = await toBase64(imageFile);
+        updateData.profileImage = base64Image;
+      } catch (error) {
+        console.error("Image conversion to Base64 failed: ", error);
+      }
+    }
+    updateData.age = Number(data.age);
+    updateData.birthDay.year = Number(data.birthDay.year);
+    updateData.birthDay.month = Number(data.birthDay.month);
+    updateData.birthDay.day = Number(data.birthDay.day);
+    console.log(updateData);
+    await axios.post("http://localhost:8080/users", updateData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    navigate("/");
+  };
 
   return (
     <Box className={classes.formBox}>
@@ -77,7 +140,7 @@ export const NewUserComponents = ({ onSubmit }: Props) => {
           >
             <Controller
               control={control}
-              name="lastName"
+              name="firstName"
               render={({ field }) => (
                 <TextField variant="outlined" label="姓" fullWidth {...field} />
               )}
@@ -86,7 +149,7 @@ export const NewUserComponents = ({ onSubmit }: Props) => {
           <Box className={classes.inputBox} sx={{ width: "48%" }}>
             <Controller
               control={control}
-              name="firstName"
+              name="lastName"
               render={({ field }) => (
                 <TextField variant="outlined" label="名" fullWidth {...field} />
               )}
@@ -169,10 +232,34 @@ export const NewUserComponents = ({ onSubmit }: Props) => {
             />
           </Grid>
         </Grid>
+        <InputLabel>プロフィール画像を選ぶ</InputLabel>
+        <Controller
+          name="profileImage"
+          control={control}
+          render={({ field }) => (
+            <Input
+              {...field}
+              type="file"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                handleImageChanges(e);
+                field.onChange(e);
+              }}
+            />
+          )}
+        />
+        {previewImages && (
+          <Box>
+            <img
+              src={previewImages}
+              alt="preview"
+              style={{ width: "500px", height: "450px" }}
+            />
+          </Box>
+        )}
         <Box>
           <Button
             className={classes.submitButton}
-            onClick={handleSubmit(onSubmit)}
+            onClick={handleSubmit(onSubmits)}
             variant="contained"
             fullWidth
           >

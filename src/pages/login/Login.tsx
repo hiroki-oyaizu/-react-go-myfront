@@ -30,7 +30,14 @@ export const Login = () => {
       const res = await axios.post("http://localhost:8080/login", data);
       if (res.status === 200) {
         const { token, firstName, lastName, userId } = res.data;
-        await login(data.mail, data.password, token, firstName, lastName); // トークンと名前・姓をlogin関数に渡す
+        await login(
+          data.mail,
+          data.password,
+          token,
+          userId,
+          firstName,
+          lastName
+        ); // userId を追加
         navigate("/"); // トップページへリダイレクト
       }
     } catch (error) {

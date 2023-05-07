@@ -8,7 +8,7 @@ import { styled } from "@mui/system";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import { useAuth } from "../../contexts/AuthContext";
 
-const CustomTextField = styled(TextField)({
+export const CustomTextField = styled(TextField)({
   backgroundColor: "white",
   width: 552,
   height: 45,
@@ -29,9 +29,7 @@ const CustomTextField = styled(TextField)({
 export const Header = () => {
   const { userId, firstName, lastName, isLoggedIn, logout } = useAuth();
 
-  useEffect(() => {
-    console.log("User ID:", userId);
-  }, [firstName, lastName, userId]);
+  useEffect(() => {}, [firstName, lastName, userId]);
   return (
     <Box
       sx={{

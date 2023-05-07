@@ -6,6 +6,7 @@ export type AllUserType = {
   mail: string;
   password: string;
   profilePicture: string;
+  profileImage: string;
   birthDay: {
     year: number;
     month: number;

@@ -3,4 +3,7 @@ export type TweetType = {
   tweet_content: string;
   image: string;
   user_id: number;
+  firstName: string;
+  lastName: string;
+  profileImage: string;
 };
