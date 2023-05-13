@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import dummy from "../../project/images/screenshot.png";
 import SearchIcon from "@mui/icons-material/Search";
-import { styled } from "@mui/system";
+import { styled } from "@mui/material";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import { useAuth } from "../../contexts/AuthContext";
 

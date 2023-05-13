@@ -4,63 +4,39 @@ export const TweetIndex = () => {
   const data = [
     {
       id: 1,
-      name: "Aスーパー",
-      address: "東京都、、、、",
-      category: [
+      name: "鈴木一郎",
+      telePhone: "090-5555-1111",
+      mail: "test@yahoo.co.jp",
+      flightList: [
         {
-          categoryId: 1,
-          name: "食品",
-          list: [
-            { 食品id: 1, 食品name: "カレー" },
-            { 食品id: 2, 食品name: "ケーキ" },
-          ],
+          flightName: "A空港",
+          flightNumber: 111,
+          start: "大阪",
+          end: "東京",
+          startDate: "2021/10/10",
+          endDate: "2021/10/11",
         },
         {
-          categoryId: 2,
-          name: "衣料品",
-          list: [
-            { 衣料品id: 1, 衣料品name: "上着" },
-            { 衣料品id: 2, 衣料品name: "下着" },
-          ],
-        },
-        {
-          categoryId: 3,
-          name: "家電",
-          list: [
-            { 家電id: 1, 家電name: "ドライヤー" },
-            { 家電id: 2, 家電name: "洗濯機" },
-          ],
+          flightName: "B空港",
+          flightNumber: 211,
+          start: "愛知",
+          end: "東京",
+          startDate: "2021/10/10",
+          endDate: "2021/10/11",
         },
       ],
-    },
-    {
-      id: 2,
-      name: "Bスーパー",
-      address: "大阪、、、、",
-      category: [
+      hotelList: [
         {
-          categoryId: 1,
-          name: "食品",
-          list: [
-            { 食品id: 1, 食品name: "カレー" },
-            { 食品id: 2, 食品name: "ケーキ" },
-          ],
+          hotelName: "ホテルA",
+          hotelType: "sweet",
+          checkIN: "2021/10/10",
+          checkOut: "2021/10/11",
         },
         {
-          categoryId: 2,
-          name: "衣料品",
-          list: [
-            { 衣料品id: 1, 衣料品name: "上着" },
-            { 衣料品id: 2, 衣料品name: "下着" },
-          ],
-        },
-        {
-          categoryId: 3,
-          name: "家電",
-          list: [
-            { 家電id: 1, 家電name: "ドライヤー" },
-            { 家電id: 2, 家電name: "洗濯機" },
-          ],
+          hotelName: "ホテルB",
+          hotelType: "normal",
+          checkIN: "2021/10/13",
+          checkOut: "2021/10/18",
         },
       ],
     },

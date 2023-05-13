@@ -20,6 +20,7 @@ export const LeftSideBar = () => {
         gap: "30px",
         backgroundColor: "black",
         height: "100vh",
+        p: 0,
       }}
     >
       <Box sx={{ mt: 3 }}>

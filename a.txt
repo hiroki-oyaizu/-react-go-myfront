@@ -1,0 +1,9 @@
+likeテーブル
+id like_count user_id tweet_id
+ログインしたユーザーがハートマーク（いいね）を押したら押されたtweetの投稿カウントが増える
+
+const data = [
+  tweet_id: ?
+  user_id: ?
+  like_count: +1
+]

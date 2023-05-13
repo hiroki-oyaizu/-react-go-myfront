@@ -63,20 +63,17 @@ export const NewTweetComponents = () => {
       // 画像ファイルが選択された場合、Base64形式に変換して追加
       try {
         const base64Image = await toBase64(imageFile);
-        console.log("Base64 Image Data:", base64Image);
         updatedData.image = base64Image;
       } catch (error) {
         console.error("Image conversion to Base64 failed: ", error);
       }
     }
-    console.log(updatedData);
 
     await axios.post("http://localhost:8080/tweet/new", updatedData, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-
     navigate("/");
   };
 
@@ -90,12 +87,9 @@ export const NewTweetComponents = () => {
           justifyContent="center"
           sx={{ mt: 12 }}
         >
-          {/* 自分の写真 */}
-          {/* 画像投稿 */}
           <FormComponents
             control={control}
             name={"tweet_content"}
-            // label={"今何してる？"}
             multiline={true}
             rows={10}
             placeholder={"今何してる？"}
@@ -120,7 +114,6 @@ export const NewTweetComponents = () => {
               />
             )}
           />
-
           {previewImage && (
             <Box>
               <img

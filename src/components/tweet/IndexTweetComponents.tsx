@@ -1,11 +1,15 @@
 import React, { useEffect } from "react";
 import { TweetType } from "../../types/tweet/TweetType";
-import { Box, TextField, styled } from "@mui/material";
+import { Box, Button, TextField, styled } from "@mui/material";
 import { LeftSideBar } from "../layout/sidebar/LeftSideBar";
 import SearchIcon from "@mui/icons-material/Search";
 import { InputAdornment } from "@mui/material";
 import { Link } from "react-router-dom";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import SmsIcon from "@mui/icons-material/Sms";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+import AlignVerticalBottomIcon from "@mui/icons-material/AlignVerticalBottom";
 export const CustomSearchTextField = styled(TextField)({
   backgroundColor: "white",
   width: 480,
@@ -73,10 +77,9 @@ export const IndexTweetComponents = ({ allTweets, GetAllTweets }: Props) => {
               }}
             >
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <>{console.log("Profile Image:", tweet.profileImage)}</>
                 {tweet.profileImage && (
                   <Box mr={2}>
-                    <Link to={`/tweet/${tweet.id}`}>
+                    <Link to={`/users/${tweet.user_id}`}>
                       <img
                         src={tweet.profileImage}
                         alt="tweet"
@@ -107,14 +110,29 @@ export const IndexTweetComponents = ({ allTweets, GetAllTweets }: Props) => {
                         style={{
                           display: tweet.image ? "block" : "none",
                           width: "888px",
-                          height: "368px",
+                          height: "348px",
                           marginTop: "30px",
                           borderRadius: "5%",
                         }}
                       />
                     </Box>
                   )}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      width: "400px", // ここで間隔を調整できます
+                      marginTop: "10px",
+                    }}
+                  >
+                    <FavoriteIcon sx={{ color: "white" }} />
+                    <SmsIcon sx={{ color: "white" }} />
+                    <AutorenewIcon sx={{ color: "white" }} />
+                    <AlignVerticalBottomIcon sx={{ color: "white" }} />
+                  </Box>
                 </Box>
+                <Button>フォローする</Button>
                 <MoreHorizIcon sx={{ color: "white" }} />
               </Box>
             </Box>
