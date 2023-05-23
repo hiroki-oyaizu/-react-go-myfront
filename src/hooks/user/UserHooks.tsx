@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { AllUserType } from "../../types/user/UserType";
 import { useState } from "react";
 
-export const useNewUser = () => {
+export const useUserHooks = () => {
   const navigate = useNavigate();
+
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
 

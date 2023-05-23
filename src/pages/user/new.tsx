@@ -1,9 +1,9 @@
 import React from "react";
 import { NewUserComponents } from "../../components/user/NewUserComponents";
-import { useNewUser } from "../../hooks/user/UserHooks";
+import { useUserHooks } from "../../hooks/user/UserHooks";
 
 export const NewUser = () => {
-  const { onSubmit, previewImage, handleImageChange } = useNewUser();
+  const { onSubmit, previewImage, handleImageChange } = useUserHooks();
   return (
     <>
       <NewUserComponents

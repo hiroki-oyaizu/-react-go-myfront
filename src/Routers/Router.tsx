@@ -16,6 +16,7 @@ import { NewUser } from "../pages/user/new";
 import { NewTweet } from "../pages/tweet/new";
 import { IndexTweet } from "../pages/tweet";
 import { ShowTweet } from "../pages/tweet/show";
+import { Edit2 } from "../pages/user/edit2";
 
 export const Router = () => {
   return (
@@ -42,7 +43,7 @@ export const Router = () => {
             <Route path="/users" element={<IndexUser />} />
             <Route path="/users/new" element={<NewUser />} />
             <Route path="/users/:id" element={<ShowUser />} />
-            <Route path="/users/edit/:id" element={<EditUser />} />
+            <Route path="/users/edit/:id" element={<Edit2 />} />
 
             <Route path="/tweet" element={<IndexTweet />} />
             <Route path="/tweet/new" element={<NewTweet />} />

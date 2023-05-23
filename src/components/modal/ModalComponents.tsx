@@ -5,7 +5,6 @@ import Modal from "@mui/material/Modal";
 type Props = {
   children?: React.ReactNode;
   open: boolean;
-  handleOpen: () => void;
   handleClose: () => void;
   width?: string;
   height?: string;
@@ -18,12 +17,11 @@ type Props = {
 
 export const ModalComponents = ({
   open,
-  handleOpen,
   handleClose,
   width,
   height,
   fontSize,
-  bgcolor,
+  bgcolor = "white",
   border,
   p,
   maxHeight,
@@ -44,7 +42,6 @@ export const ModalComponents = ({
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: width,
-            minHeight: height,
             fontSize: fontSize,
             bgcolor: bgcolor,
             border: border,

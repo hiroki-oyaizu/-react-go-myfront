@@ -9,6 +9,9 @@ import { styled } from "@mui/material";
 import bgImage from "../../project/images//BackImage.jpeg";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useAuth } from "../../contexts/AuthContext";
+import { ModalComponents } from "../modal/ModalComponents";
+import { CreateOrCancelCheckModalContent } from "../modal/CreateOrCancelCheckModalContent";
+import { FollowType } from "../../types/Follow/FollowType";
 export const CustomProfileOrFollowButton = styled(Button)({
   color: "white",
   fontSize: 20,
@@ -23,8 +26,12 @@ export const CustomProfileOrFollowButton = styled(Button)({
 export const ShowTweetComponents = () => {
   const { id } = useParams();
   const { userId } = useAuth();
-  const navigate = useNavigate();
   const [user, setUser] = useState<AllUserType>();
+  const [open, setOpen] = useState(false);
+  const openModal = () => setOpen(true);
+  const closeModal = () => setOpen(false);
+  const navigate = useNavigate();
+  const goToAllTweetPage = () => navigate("/");
 
   const deleteUser = async () => {
     await axios.delete(`http://localhost:8080/users/${id}`);
@@ -34,8 +41,6 @@ export const ShowTweetComponents = () => {
   const goToEditUserPage = () => {
     navigate(`/users/edit/${id}`);
   };
-
-  const goToAllTweetPage = () => navigate("/");
 
   const fetchUser = async () => {
     const res = await axios.get<AllUserType>(
@@ -49,9 +54,37 @@ export const ShowTweetComponents = () => {
       console.log(error);
     }
   };
+
+  const postFollow = async (id: number) => {
+    const createData: FollowType = { user_id: userId, follow_user_id: id };
+    console.log(createData);
+    await axios.post(`http://localhost:8080/follow/new`, createData);
+  };
+  const [isFollowing, setIsFollowing] = useState(false);
+
+  const checkFollowStatus = async () => {
+    const res = await axios.get(
+      `http://localhost:8080/follow/isFollowing?loggedInUserId=${userId}&targetUserId=${id}`
+    );
+    try {
+      if (res.status === 200 && res.data) {
+        setIsFollowing(res.data.isFollowing);
+        // console.log(res.data.isFollowing);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const unfollow = async (id: number) => {
+    const unfollowData: FollowType = { user_id: userId, follow_user_id: id };
+    await axios.post(`http://localhost:8080/follow/unfollow`, unfollowData);
+    setIsFollowing(false); // update the local state
+  };
   useEffect(() => {
     fetchUser();
-  }, []);
+    checkFollowStatus();
+  }, [userId, id]);
 
   return (
     <>
@@ -118,9 +151,19 @@ export const ShowTweetComponents = () => {
               <CustomProfileOrFollowButton onClick={goToEditUserPage}>
                 プロフィール編集
               </CustomProfileOrFollowButton>
+            ) : isFollowing ? (
+              <CustomProfileOrFollowButton
+                sx={{ color: "white" }}
+                onClick={() => user?.id && unfollow(user?.id)}
+              >
+                フォロー中
+              </CustomProfileOrFollowButton>
             ) : (
-              <CustomProfileOrFollowButton sx={{ color: "white" }}>
-                フォーロー
+              <CustomProfileOrFollowButton
+                sx={{ color: "white" }}
+                onClick={openModal}
+              >
+                フォロー
               </CustomProfileOrFollowButton>
             )}
           </Box>
@@ -137,6 +180,18 @@ export const ShowTweetComponents = () => {
           </Box>
         </Box>
       </Box>
+      <ModalComponents
+        width={"300px"}
+        height={"70px"}
+        open={open}
+        handleClose={closeModal}
+      >
+        <CreateOrCancelCheckModalContent
+          handleClose={closeModal}
+          postFollow={postFollow}
+          userIdToFollow={user?.id}
+        />
+      </ModalComponents>
     </>
   );
 };

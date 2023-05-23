@@ -1,58 +1,16 @@
+import React, { useEffect } from "react";
 import { Box, Button, InputLabel, TextField, Input } from "@material-ui/core";
 import { useForm, Controller } from "react-hook-form";
 import { AllUserType } from "../../types/user/UserType";
 import { Grid, Stack, Typography } from "@mui/material";
-import { makeStyles } from "@material-ui/styles";
 import { SelectComponents } from "../../components/form/SelectComponents";
 import { DayOptions, MonthOptions, YearOptions } from "../../utils/Utils";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-export const useStyles = makeStyles({
-  formBox: {
-    width: 500,
-    maxWidth: "100%",
-    margin: "0 auto",
-    marginTop: 50,
-    padding: 20,
-    borderRadius: 5,
-    backgroundColor: "#fff",
-    boxShadow: "0px 2px 6px rgba(0,0,0,0.3)",
-    textAlign: "center",
-  },
-  inputBox: {
-    marginBottom: 20,
-    "& label.Mui-focused": {
-      color: "green",
-    },
-    "& .MuiOutlinedInput-root": {
-      "&.Mui-focused fieldset": {
-        borderColor: "green",
-      },
-    },
-  },
-  submitButton: {
-    backgroundColor: "#008CBA",
-    color: "#fff",
-    "&:hover": {
-      backgroundColor: "#005F6B",
-    },
-  },
-});
-
-type Props = {
-  onSubmit: (data: AllUserType) => void;
-  previewImage: string | null;
-  handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-};
-
-export const NewUserComponents = ({
-  onSubmit,
-  previewImage,
-  handleImageChange,
-}: Props) => {
-  const classes = useStyles();
-  const { handleSubmit, control } = useForm<AllUserType>({
+import { useStyles } from "../../components/user/NewUserComponents";
+export const Edit2 = () => {
+  const { control, handleSubmit, reset } = useForm<AllUserType>({
     defaultValues: {
       id: 0,
       firstName: "",
@@ -60,17 +18,20 @@ export const NewUserComponents = ({
       age: 0,
       mail: "",
       password: "",
+      profilePicture: "",
       profileImage: "",
       birthDay: {
-        year: 1980,
-        month: 1,
-        day: 1,
+        year: 0,
+        month: 0,
+        day: 0,
       },
     },
   });
+  const [userData, setUserData] = useState(null);
+  const { id } = useParams();
   const [previewImages, setPreviewImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
-
+  const classes = useStyles();
   const navigate = useNavigate();
 
   const handleImageChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -123,10 +84,42 @@ export const NewUserComponents = ({
     navigate("/");
   };
 
+  const fetchEditUserData = async () => {
+    const res = await axios.get<AllUserType>(
+      `http://localhost:8080/users/${id}`
+    );
+    try {
+      if (res.status === 200 && res.data) {
+        console.log(res.data.id);
+        reset({
+          id: res.data.id,
+          firstName: res.data.firstName,
+          lastName: res.data.lastName,
+          age: res.data.age,
+          mail: res.data.mail,
+          password: res.data.password,
+          profilePicture: res.data.profileImage,
+          // profileImage: res.data.profileImage,
+          birthDay: {
+            year: res.data.birthDay?.year,
+            month: res.data.birthDay?.month,
+            day: res.data.birthDay?.day,
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchEditUserData();
+  }, []);
+
   return (
     <Box className={classes.formBox}>
       <Typography variant="h5" component="h1" gutterBottom>
-        新規登録
+        編集
       </Typography>
       <Stack spacing={3}>
         <Box

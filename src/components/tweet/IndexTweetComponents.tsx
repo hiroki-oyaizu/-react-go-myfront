@@ -1,15 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { TweetType } from "../../types/tweet/TweetType";
 import { Box, Button, TextField, styled } from "@mui/material";
 import { LeftSideBar } from "../layout/sidebar/LeftSideBar";
-import SearchIcon from "@mui/icons-material/Search";
-import { InputAdornment } from "@mui/material";
 import { Link } from "react-router-dom";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import SmsIcon from "@mui/icons-material/Sms";
 import AutorenewIcon from "@mui/icons-material/Autorenew";
 import AlignVerticalBottomIcon from "@mui/icons-material/AlignVerticalBottom";
+import { PopoverComponents } from "../modal/PopoverComponents";
+import { useAuth } from "../../contexts/AuthContext";
+import axios from "axios";
 export const CustomSearchTextField = styled(TextField)({
   backgroundColor: "white",
   width: 480,
@@ -42,6 +43,29 @@ type Props = {
 };
 
 export const IndexTweetComponents = ({ allTweets, GetAllTweets }: Props) => {
+  const { userId } = useAuth();
+  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
+    null
+  );
+  const [selectedTweet, setSelectedTweet] = useState<TweetType | null>(null);
+
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    tweet: TweetType
+  ) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedTweet(tweet); // ポップオーバーを開いたツイートの情報を保存します。
+    setOpen(true);
+  };
+
+  const closeModal = () => setOpen(false);
+
+  const addLikeCount = async (likeId: number) => {
+    const data = { user_id: userId, like_in_user_id: likeId };
+    await axios.post(`http://localhost:8080/like/new`, JSON.stringify(data));
+  };
+
   useEffect(() => {
     GetAllTweets();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -63,6 +87,7 @@ export const IndexTweetComponents = ({ allTweets, GetAllTweets }: Props) => {
           display: "flex",
           flexDirection: "column",
           flex: 1,
+          width: "70%",
           overflowY: "auto",
         }}
       >
@@ -109,7 +134,7 @@ export const IndexTweetComponents = ({ allTweets, GetAllTweets }: Props) => {
                         alt="tweet"
                         style={{
                           display: tweet.image ? "block" : "none",
-                          width: "888px",
+                          width: "588px",
                           height: "348px",
                           marginTop: "30px",
                           borderRadius: "5%",
@@ -122,7 +147,7 @@ export const IndexTweetComponents = ({ allTweets, GetAllTweets }: Props) => {
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      width: "400px", // ここで間隔を調整できます
+                      // width: "400px", // ここで間隔を調整できます
                       marginTop: "10px",
                     }}
                   >
@@ -132,44 +157,26 @@ export const IndexTweetComponents = ({ allTweets, GetAllTweets }: Props) => {
                     <AlignVerticalBottomIcon sx={{ color: "white" }} />
                   </Box>
                 </Box>
-                <Button>フォローする</Button>
-                <MoreHorizIcon sx={{ color: "white" }} />
+                <Button
+                  sx={{ mt: -55 }}
+                  onClick={(event) => handleClick(event, tweet)}
+                >
+                  <MoreHorizIcon sx={{ color: "white" }} />
+                </Button>
+                <PopoverComponents
+                  open={open}
+                  anchorEl={anchorEl}
+                  firstName={selectedTweet?.firstName}
+                  lastName={selectedTweet?.lastName}
+                  handleClose={closeModal}
+                ></PopoverComponents>
               </Box>
             </Box>
           );
         })}
       </Box>
 
-      <Box sx={{ width: "30%", backgroundColor: "black" }}>
-        <Box sx={{ mt: 3, ml: 3 }}>
-          <CustomSearchTextField
-            sx={{
-              borderRadius: "20px",
-              textAlign: "center",
-              p: "7px",
-              border: "none",
-              "& .MuiOutlinedInput-root": {
-                "&:hover fieldset": {
-                  borderColor: "transparent",
-                },
-                "&.Mui-focused fieldset": {
-                  borderColor: "transparent",
-                },
-              },
-            }}
-            inputProps={{
-              style: { fontSize: "20px", lineHeight: "15px" },
-            }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            }}
-          ></CustomSearchTextField>
-        </Box>
-      </Box>
+      <Box sx={{ width: "30%", backgroundColor: "black" }}></Box>
     </Box>
   );
 };
