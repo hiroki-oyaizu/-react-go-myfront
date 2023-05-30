@@ -22,11 +22,30 @@ export const CustomProfileOrFollowButton = styled(Button)({
   marginTop: "45px",
   marginRight: "45px",
 });
-
+const data = [
+  {
+    name: "",
+    address: { street: "", city: "", zipCode: "" },
+    books: [
+      { title: "", author: "", published: "" },
+      { title: "", author: "", published: "" },
+    ],
+    sections: [
+      {
+        name: "",
+        books: [
+          { title: "", author: "", published: "" },
+          { title: "", author: "", published: "" },
+        ],
+      },
+    ],
+  },
+];
 export const ShowTweetComponents = () => {
   const { id } = useParams();
   const { userId } = useAuth();
   const [user, setUser] = useState<AllUserType>();
+  const [comment, setComment] = useState<string>("");
   const [open, setOpen] = useState(false);
   const openModal = () => setOpen(true);
   const closeModal = () => setOpen(false);
@@ -81,6 +100,18 @@ export const ShowTweetComponents = () => {
     await axios.post(`http://localhost:8080/follow/unfollow`, unfollowData);
     setIsFollowing(false); // update the local state
   };
+
+  const fetchComment = async () => {
+    const res = await axios.get(`http://localhost:8080/comments/${id}`);
+    try {
+      if (res.status === 200 && res.data) {
+        setComment(res.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchUser();
     checkFollowStatus();

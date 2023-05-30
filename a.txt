@@ -1,9 +1,26 @@
-likeテーブル
-id like_count user_id tweet_id
-ログインしたユーザーがハートマーク（いいね）を押したら押されたtweetの投稿カウントが増える
+FavoriteIconを押したらいいね数をカウントしたい
+ハートボタンを押したらカウントを1upする
+ハートの色を赤色にする
 
-const data = [
-  tweet_id: ?
-  user_id: ?
-  like_count: +1
-]
+
+どのユーザーがどのツイートに対していいねをしたか判断すす
+必要
+user_id 現在ログインしてる人
+tweet.id どのツイート
+
+カウントを更新するstate
+const [likeCount,setLikeCount] = useState<number>(0)
+
+const addLikeTweetCount = async (user_id, tweet_id) ={
+
+  try{
+axios.post("/addLike?userid=${userID}&&tweet_id=${tweet_id}")
+
+setLikecount(+1)
+  }catch{
+    エラーを出す
+  }
+
+
+
+}

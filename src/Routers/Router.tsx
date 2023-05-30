@@ -17,6 +17,8 @@ import { NewTweet } from "../pages/tweet/new";
 import { IndexTweet } from "../pages/tweet";
 import { ShowTweet } from "../pages/tweet/show";
 import { Edit2 } from "../pages/user/edit2";
+import { Caps } from "../pages/TEST/Text/Caps";
+import IndexCaps from "../pages/TEST/Text/IndexCaps";
 
 export const Router = () => {
   return (
@@ -49,6 +51,8 @@ export const Router = () => {
             <Route path="/tweet/new" element={<NewTweet />} />
             <Route path="/tweet/:id" element={<ShowTweet />} />
             <Route path="/listing/new" element={<ListingNew />} />
+            <Route path="/caps" element={<Caps />} />
+            <Route path="/capsIndex" element={<IndexCaps />} />
           </Routes>
         </BrowserRouter>
       </AuthContextProvider>

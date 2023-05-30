@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TweetType } from "../../types/tweet/TweetType";
-import { Box, Button, TextField, styled } from "@mui/material";
+import { Box, Button, TextField, Typography, styled } from "@mui/material";
 import { LeftSideBar } from "../layout/sidebar/LeftSideBar";
 import { Link } from "react-router-dom";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -11,6 +11,7 @@ import AlignVerticalBottomIcon from "@mui/icons-material/AlignVerticalBottom";
 import { PopoverComponents } from "../modal/PopoverComponents";
 import { useAuth } from "../../contexts/AuthContext";
 import axios from "axios";
+import { CreateCommentPopover } from "../modal/CreateCommentPopover";
 export const CustomSearchTextField = styled(TextField)({
   backgroundColor: "white",
   width: 480,
@@ -48,8 +49,20 @@ export const IndexTweetComponents = ({ allTweets, GetAllTweets }: Props) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
+  const [anchorElComment, setAnchorElComment] =
+    React.useState<HTMLButtonElement | null>(null);
   const [selectedTweet, setSelectedTweet] = useState<TweetType | null>(null);
 
+  const [commentModal, setCommentModal] = useState<boolean>(false);
+  const handleOpenClickCommentModal = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    tweet: TweetType
+  ) => {
+    setAnchorElComment(event.currentTarget);
+    setSelectedTweet(tweet);
+    setCommentModal(true);
+  };
+  const handleCloseClickCommentModal = () => setCommentModal(false);
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement>,
     tweet: TweetType
@@ -61,15 +74,48 @@ export const IndexTweetComponents = ({ allTweets, GetAllTweets }: Props) => {
 
   const closeModal = () => setOpen(false);
 
-  const addLikeCount = async (likeId: number) => {
-    const data = { user_id: userId, like_in_user_id: likeId };
-    await axios.post(`http://localhost:8080/like/new`, JSON.stringify(data));
+  const [likeCounts, setLikeCounts] = useState<{ [key: string]: number }>({});
+  const getAllLikeCount = async () => {
+    try {
+      const res = await axios.get(`http://localhost:8080/like/all`);
+      console.log(res.data);
+      if (res.status === 200 && res.data) {
+        setLikeCounts(res.data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleLike = async (tweetId: number) => {
+    // ここでいいねを実行する API を呼び出す
+    await axios.post("http://localhost:8080/like", {
+      user_id: userId,
+      tweet_id: tweetId,
+    });
+    try {
+      // いいねを実行した後、そのツイートのいいね数を取得
+      const url = `http://localhost:8080/like/${tweetId}`;
+      console.log(`Request URL: ${url}`);
+      const res = await axios.get(url);
+
+      console.log(res.data.likeCount);
+      // 前の状態をコピーして新しいいいね数で更新
+      setLikeCounts((prevState) => ({
+        ...prevState,
+        [tweetId]: res.data.likeCount,
+      }));
+    } catch (error) {
+      console.error("Error updating like count:", error);
+    }
   };
 
   useEffect(() => {
     GetAllTweets();
+    getAllLikeCount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   return (
     <Box
       sx={{
@@ -147,12 +193,25 @@ export const IndexTweetComponents = ({ allTweets, GetAllTweets }: Props) => {
                       display: "flex",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      // width: "400px", // ここで間隔を調整できます
                       marginTop: "10px",
                     }}
                   >
-                    <FavoriteIcon sx={{ color: "white" }} />
-                    <SmsIcon sx={{ color: "white" }} />
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      <FavoriteIcon
+                        sx={{ color: "white" }}
+                        onClick={() => handleLike(tweet.id)}
+                      />
+                      <Box sx={{ color: "white", marginLeft: "8px" }}>
+                        {likeCounts[tweet.id] ? likeCounts[tweet.id] : 0}
+                      </Box>
+                    </Box>
+                    <Button
+                      onClick={(event) =>
+                        handleOpenClickCommentModal(event, tweet)
+                      }
+                    >
+                      <SmsIcon sx={{ color: "white" }} />
+                    </Button>
                     <AutorenewIcon sx={{ color: "white" }} />
                     <AlignVerticalBottomIcon sx={{ color: "white" }} />
                   </Box>
@@ -166,10 +225,24 @@ export const IndexTweetComponents = ({ allTweets, GetAllTweets }: Props) => {
                 <PopoverComponents
                   open={open}
                   anchorEl={anchorEl}
-                  firstName={selectedTweet?.firstName}
-                  lastName={selectedTweet?.lastName}
                   handleClose={closeModal}
-                ></PopoverComponents>
+                >
+                  <Box p={2}>
+                    <Typography>
+                      {selectedTweet?.firstName}
+                      {selectedTweet?.lastName}さんをフォローする
+                    </Typography>
+                    <Typography>プロフィールを見る</Typography>
+                    <Typography>報告する</Typography>
+                  </Box>
+                </PopoverComponents>
+                <PopoverComponents
+                  open={commentModal}
+                  anchorEl={anchorElComment}
+                  handleClose={handleCloseClickCommentModal}
+                >
+                  <CreateCommentPopover tweetId={selectedTweet?.id} />
+                </PopoverComponents>
               </Box>
             </Box>
           );

@@ -3,26 +3,49 @@ import React from "react";
 export const TweetIndex = () => {
   const data = [
     {
-      id: 1,
-      title: "test",
-      year: 2021,
-      author: "A監督",
-      出演者: [
-        { id: 1, name: "take" },
-        { id: 2, name2: "take2" },
+      teamId: 1,
+      teamName: "ライオンズ",
+      founded: 1908,
+      active: true,
+      playerList: [
+        {
+          playerId: 10,
+          playerName: "Tom Smith",
+          joined: 2018,
+          Position: "Forward",
+        },
+        {
+          playerId: 20,
+          playerName: "John Doe",
+          joined: 2020,
+          Position: "Midfielder",
+        },
+        {
+          playerId: 30,
+          playerName: "Jane Davis",
+          joined: 2019,
+          Position: "Defender",
+        },
+        {
+          playerId: 40,
+          playerName: "Emily Clark",
+          joined: 2021,
+          Position: "Goalkeeper",
+        },
+        {
+          playerId: 50,
+          playerName: "Robert Johnson",
+          joined: 2020,
+          Position: "Defender",
+        },
       ],
-      評価: { IMDb: 7.8, RottenTomatoes: 7.8 },
     },
     {
-      id: 2,
-      title: "test",
-      year: 2027,
-      author: "B監督",
-      出演者: [
-        { id: 1, name: "takeshi" },
-        { id: 2, name2: "takeshi2" },
-      ],
-      評価: { IMDb: 9.8, RottenTomatoes: 7.8 },
+      teamId: 2,
+      teamName: "タイガース",
+      founded: 1915,
+      active: true,
+      playerList: [],
     },
   ];
   return (
